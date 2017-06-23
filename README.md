@@ -1,6 +1,6 @@
-# router-frontend
+# Dyanmic display advertising feed validator
 
-> A Vue.js project
+> This is only the frontend, the backend is made by Ryan Vlaming.
 
 ## Build Setup
 
@@ -18,4 +18,3 @@ npm run build
 npm run build --report
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

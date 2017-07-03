@@ -29,7 +29,7 @@
         <div class="ui row">
           <div class="ui sixteen wide column">
 
-            <div v-if="error" class="ui error message">
+            <div v-show="error" class="ui error message">
               The tests have failed, here is the reason why: <b>{{ error }}</b>
             </div>
 
@@ -39,13 +39,18 @@
             </div>
 
             <div v-for="(err, index) in errors" v-if="err.err" class="ui error message">
-              <p ><span v-if="err.err"><b>{{ index + 1 }}</b>: {{ err.message }}</span></p>
-              <div v-if="err.additionalReturns">
-                <h1>JAA MAN ECHTZOO</h1>
-                <pre>{{ err.additionalReturns }}</pre>
-                <!-- <pre>{{ additionalHeaders }}</pre> -->
+              <p><span v-show="err.err"><b>{{ index + 1 }}</b>: {{ err.message }}</span></p>
+
+              <div v-if="err.additionalReturns.valueNames">
+                <a @click="showValueNames = !showValueNames">Show available headers</a>
+                <div v-show="showValueNames">
+                  <div class="item" v-for="valueName in err.additionalReturns.valueNames">• {{ valueName }} </div>
+                  <a @click="showValueNames = !showValueNames">Hide valuenames</a>
+                </div>
               </div>
+
             </div>
+
 
             <div v-show="errors.length <= 0 && tested == true">
               <div class="ui success message">
@@ -66,7 +71,6 @@
 </template>
 
 <script>
-  /*eslint-disable*/
   import { pipe, flatten, filter, prop, propEq } from 'ramda'
   let local = true
   const url = local ? 'http://localhost:9097' : 'http://fabulousduck.com:9097'
@@ -87,7 +91,8 @@
         tested: false,
         feedType: '',
         feedTypes: ['custom', 'education', 'travel', 'realEstate', 'localDeals', 'jobs', 'HAR', 'flights'],
-        additionalHeaders: []
+        additionalHeaders: [],
+        showValueNames: false
       }
     },
 
@@ -110,7 +115,7 @@
           if (error.additionalReturns.valueNames) {
             return this.$set(this, 'additionalHeaders', error.additionalReturns.valueNames)
           } else {
-            return ''
+            return 'No value names returned'
           }
         })
       }
@@ -124,11 +129,14 @@
         const reader = new FileReader()
         this.$set(this, 'fileName', file.name)
 
-        reader.readAsDataURL(file)
+        reader.readAsText(file)
 
         reader.onload = () => {
-          this.$set(this.body, 'file', reader.result)
+          const base64File = btoa(reader.result)
+          console.log('raw', String.raw`${reader.result}`)
+          this.$set(this.body, 'file', base64File)
           this.adwordsPreFlight(this.body)
+          console.log(base64File)
         }
       },
 

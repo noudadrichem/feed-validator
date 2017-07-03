@@ -27,9 +27,9 @@
             </div>
           </div>
 
-          <div class="column network" data-tooltip="Doubleclick coming soon!">
-            <div @click="routeTo('/')" class="column-content disabled">
-              <img class="ui image" src="https://cdn.worldvectorlogo.com/logos/doubleclick.svg" alt="Double click">
+          <div class="column network">
+            <div @click="routeTo('doubleclick')" class="column-content">
+              <img class="ui image" src="https://cdn.worldvectorlogo.com/logos/doubleclick.svg" alt="Doubleclick">
             </div>
           </div>
         </div>
@@ -47,11 +47,11 @@
     name: 'chooseNetwork',
     data () {
       return {
-        title: 'Choose your ad network'
+        title: 'Choose your advertisement network'
       }
     },
     methods: {
-      routeTo (compo) { router.push(compo) }
+      routeTo (component) { router.push(component) }
     }
   }
 </script>

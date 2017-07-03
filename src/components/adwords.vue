@@ -11,21 +11,17 @@
           <div class="center aligned six wide column">
             <div class="ui segment">
 
-              <!-- <label for="seperator">What kind of seperator are you using?</label><br>
-              <select @change="disable" v-model="body.separator" class='ui selection dropdown' id="seperator">
-                <option value=''>Choose seperator</option>
-                <option value=",">Comma (,)</option>
-                <option value=";">Semicolon (;)</option>
-                <option value=";">Vertical bar (|)</option>
-                <option value=";">Tab (\t)</option>
+              <label for="seperator">What kind of feedtype are you using?</label><br>
+              <select @change="" v-model="feedType" class='ui selection dropdown' id="seperator">
+                <option value="">Choose your feedtype</option>
+                <option v-for="feedtype in feedTypes" :value="feedtype">{{feedtype}}</option>
               </select>
- -->
+
 
 
               <input @change="getFile" ref="input" type="file" name="input" id="input"/>
               <label ref="label" class="ui fluid primary button" for="input">{{ btnTxt }}</label>
             </div>
-
 
           </div>
         </div>
@@ -37,13 +33,18 @@
               The tests have failed, here is the reason why: <b>{{ error }}</b>
             </div>
 
-            <p v-show="fileName" class='ui message'>
+            <div v-show="fileName" class='ui message default'>
               You uploaded: <b>{{ fileName }}</b> and have a total of
               <b>{{ errors.length }}</b> invalid item(s) in your feed.
-            </p>
+            </div>
 
             <div v-for="(err, index) in errors" v-if="err.err" class="ui error message">
               <p ><span v-if="err.err"><b>{{ index + 1 }}</b>: {{ err.message }}</span></p>
+              <div v-if="err.additionalReturns">
+                <h1>JAA MAN ECHTZOO</h1>
+                <pre>{{ err.additionalReturns }}</pre>
+                <!-- <pre>{{ additionalHeaders }}</pre> -->
+              </div>
             </div>
 
             <div v-show="errors.length <= 0 && tested == true">
@@ -84,7 +85,9 @@
         response: [],
         loading: false,
         tested: false,
-        feedType: 'custom'
+        feedType: '',
+        feedTypes: ['custom', 'education', 'travel', 'realEstate', 'localDeals', 'jobs', 'HAR', 'flights'],
+        additionalHeaders: []
       }
     },
 
@@ -100,6 +103,16 @@
           flatten,
           filter(propEq('type', 'RECCOMMEND_ERR'))
         )(this.response)
+      },
+
+      additionalReturns () {
+        return this.errors.map(error => {
+          if (error.additionalReturns.valueNames) {
+            return this.$set(this, 'additionalHeaders', error.additionalReturns.valueNames)
+          } else {
+            return ''
+          }
+        })
       }
     },
 
@@ -122,6 +135,7 @@
       adwordsPreFlight (body) {
         this.$http.post(`${url}/v1/adwords/preFlight`, body)
           .then(({ body: res }) => {
+            console.log('adwordsPreFlight', res)
             this.$set(this, 'loading', false)
             this.$set(this, 'response', res.results)
 
@@ -131,9 +145,10 @@
           })
       },
 
-      adwordsPostFlight (fid) {
-        this.$http.get(`${url}/v1/adwords/postFlight/${this.feedType}/${fid}`)
+      adwordsPostFlight (fileId) {
+        this.$http.get(`${url}/v1/adwords/postFlight/${this.feedType}/${fileId}`)
           .then(({ body: res }) => {
+            console.log('adwordsPostFlight', res)
             res.message
             ? this.$set(this, 'error', res.message)
             : this.$set(this, 'response', res) && this.$set(this, 'tested', true)
@@ -154,7 +169,7 @@
       }
     },
     updated () {
-      console.log('recomments', this.recomments)
+      console.log('additionalReturns', this.additionalReturns);
     }
   }
 </script>

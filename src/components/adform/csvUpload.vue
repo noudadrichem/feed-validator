@@ -40,7 +40,9 @@
               <div v-for="(err, index) in errors" v-if="err.err" class="ui error message">
                 <p ><span v-if="err.err"><b>{{ index + 1 }}</b>: {{ err.message }}</span></p>
               </div>
+            </div>
 
+            <div v-if="tested">
               <h1>Recommended to change</h1>
               <div v-for="(err, index) in recomments" v-if="err.err" class="ui warning message">
                 <p ><span v-if="err.err"><b>{{ index + 1 }}</b>: {{ err.message }}</span></p>
@@ -67,7 +69,6 @@
 </template>
 
 <script>
-  /*eslint-disable*/
   import { pipe, flatten, filter, prop, propEq } from 'ramda'
   let local = true
   const url = local ? 'http://localhost:9097' : 'http://fabulousduck.com:9097'
@@ -142,6 +143,11 @@
           this.btnTxt = 'Upload'
         }
       }
+    },
+    updated () {
+      console.log('errors', this.errors)
+      console.log('reccoments', this.recomments)
+      console.log('tested', this.tested)
     }
   }
 </script>

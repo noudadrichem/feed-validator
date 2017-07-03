@@ -161,6 +161,7 @@
           this.$http.post(`${url}/v1/merchantcenter`, this.body)
             .then(({ body: res }) => {
               this.$set(this, 'loading', false)
+              this.$set(this, 'error', '')
               this.$set(this, 'urlError', '')
 
               res.message

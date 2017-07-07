@@ -78,9 +78,8 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import { pipe, flatten, filter, prop, propEq } from 'ramda'
-  let local = true
-  const url = local ? 'http://localhost:9097' : 'http://fabulousduck.com:9097'
 
   export default {
     name: 'XmlUploadGoogleMerchantCenter',
@@ -158,7 +157,7 @@
         if(givenUrl.match(urlReg)) {
           this.$set(this, 'loading', true)
 
-          this.$http.post(`${url}/v1/merchantcenter`, this.body)
+          this.$http.post(`${Vue.$config.apiUrl}/v1/merchantcenter`, this.body)
             .then(({ body: res }) => {
               this.$set(this, 'loading', false)
               this.$set(this, 'error', '')

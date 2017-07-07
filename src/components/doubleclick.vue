@@ -67,10 +67,8 @@
 </template>
 
 <script>
-  /*eslint-disable*/
+  import Vue from 'vue'
   import { pipe, flatten, filter, prop, propEq } from 'ramda'
-  let local = true
-  const url = local ? 'http://localhost:9097' : 'http://fabulousduck.com:9097'
 
   export default {
     name: 'csvUploadDoubleclick',
@@ -123,7 +121,7 @@
       },
 
       uploadAdformCsv (body) {
-        this.$http.post(`${url}/v1/doubleclick/csv`, body)
+        this.$http.post(`${Vue.$config.apiUrl}/v1/doubleclick/csv`, body)
           .then(({ body: res }) => {
             console.log(res)
             this.$set(this, 'loading', false)

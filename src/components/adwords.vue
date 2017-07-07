@@ -45,7 +45,7 @@
                 <a @click="showValueNames = !showValueNames">Show available headers</a>
                 <div v-show="showValueNames">
                   <div class="item" v-for="valueName in err.additionalReturns.valueNames">• {{ valueName }} </div>
-                  <a @click="showValueNames = !showValueNames">Hide valuenames</a>
+                  <a @click="showValueNames = !showValueNames">Hide available headers</a>
                 </div>
               </div>
 
@@ -71,9 +71,8 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import { pipe, flatten, filter, prop, propEq } from 'ramda'
-  let local = true
-  const url = local ? 'http://localhost:9097' : 'http://fabulousduck.com:9097'
 
   export default {
     name: 'csvUploadAdwords',
@@ -129,19 +128,17 @@
         const reader = new FileReader()
         this.$set(this, 'fileName', file.name)
 
-        reader.readAsText(file)
+        reader.readAsDataURL(file)
 
         reader.onload = () => {
-          const base64File = btoa(reader.result)
-          console.log('raw', String.raw`${reader.result}`)
-          this.$set(this.body, 'file', base64File)
+          this.$set(this.body, 'file', reader.result)
+          console.log(this.body)
           this.adwordsPreFlight(this.body)
-          console.log(base64File)
         }
       },
 
       adwordsPreFlight (body) {
-        this.$http.post(`${url}/v1/adwords/preFlight`, body)
+        this.$http.post(`${Vue.$config.apiUrl}/v1/adwords/preFlight`, body)
           .then(({ body: res }) => {
             console.log('adwordsPreFlight', res)
             this.$set(this, 'loading', false)
@@ -154,7 +151,7 @@
       },
 
       adwordsPostFlight (fileId) {
-        this.$http.get(`${url}/v1/adwords/postFlight/${this.feedType}/${fileId}`)
+        this.$http.get(`${Vue.$config.apiUrl}/v1/adwords/postFlight/${this.feedType}/${fileId}`)
           .then(({ body: res }) => {
             console.log('adwordsPostFlight', res)
             res.message
@@ -175,9 +172,6 @@
           this.btnTxt = 'Upload'
         }
       }
-    },
-    updated () {
-      console.log('additionalReturns', this.additionalReturns);
     }
   }
 </script>

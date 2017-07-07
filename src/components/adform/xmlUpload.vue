@@ -63,10 +63,8 @@
 </template>
 
 <script>
-  /*eslint-disable*/
+  import Vue from 'vue'
   import { pipe, flatten, filter, prop, propEq } from 'ramda'
-  let local = true
-  const url = local ? 'http://localhost:9097' : 'http://fabulousduck.com:9097'
 
   export default {
     name: 'xmlUploadAdform',
@@ -111,7 +109,7 @@
 
         if (givenUrl.match(urlReg)) {
           this.$set(this, 'loading', true)
-          this.$http.post(`${url}/v1/adform/xml`, this.body)
+          this.$http.post(`${Vue.$config.apiUrl}/v1/adform/xml`, this.body)
             .then(({ body: res }) => {
               this.$set(this, 'urlError', '')
               this.$set(this, 'loading', false)
@@ -125,10 +123,6 @@
           this.$set(this, 'urlError', 'Make sure you\'re uploading an .xml file (url ending with .xml)')
         }
       }
-    },
-    updated () {
-      // console.log('breaking errors', this.errors)
-      // console.log('recommended errors', this.recomments)
     }
   }
 </script>

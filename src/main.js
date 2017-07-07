@@ -6,9 +6,14 @@ import router from './router'
 import resource from 'vue-resource'
 import './semantic/dist/semantic.min.css'
 import '@/assets/styles/master.styl'
+import config from '@/config'
+
+Vue.$config = config
+console.log(Vue.$config)
 
 Vue.config.productionTip = false
 Vue.use(resource)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

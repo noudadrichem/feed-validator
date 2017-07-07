@@ -69,9 +69,8 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import { pipe, flatten, filter, prop, propEq } from 'ramda'
-  let local = true
-  const url = local ? 'http://localhost:9097' : 'http://fabulousduck.com:9097'
 
   export default {
     name: 'csvUploadAdform',
@@ -124,7 +123,7 @@
       },
 
       uploadAdformCsv (body) {
-        this.$http.post(`${url}/v1/adform/csv`, body)
+        this.$http.post(`${Vue.$config.apiUrl}/v1/adform/csv`, body)
           .then(({ body: res }) => {
             this.$set(this, 'loading', false)
             this.$set(this, 'tested', true)
@@ -143,11 +142,6 @@
           this.btnTxt = 'Upload'
         }
       }
-    },
-    updated () {
-      console.log('errors', this.errors)
-      console.log('reccoments', this.recomments)
-      console.log('tested', this.tested)
     }
   }
 </script>

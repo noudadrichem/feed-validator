@@ -68,7 +68,7 @@
 
 <script>
   import Vue from 'vue'
-  import { pipe, flatten, filter, prop, propEq } from 'ramda'
+  import { pipe, flatten, filter, prop, propEq, split, take, replace, join } from 'ramda'
 
   export default {
     name: 'csvUploadDoubleclick',

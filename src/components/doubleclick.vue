@@ -68,7 +68,7 @@
 
 <script>
   import Vue from 'vue'
-  import { pipe, flatten, filter, prop, propEq } from 'ramda'
+  import { pipe, flatten, filter, prop, propEq, split, take, replace, join } from 'ramda'
 
   export default {
     name: 'csvUploadDoubleclick',
@@ -111,11 +111,18 @@
         const reader = new FileReader()
         this.$set(this, 'fileName', file.name)
 
-        reader.readAsDataURL(file)
+        reader.readAsText(file)
 
         reader.onload = () => {
-          console.log('results', reader)
-          this.$set(this.body, 'feed', reader.result)
+          const dataSample = pipe(
+            replace(/\n/g, '~\n'),
+            split('~'),
+            take(10),
+            join(''),
+            window.btoa
+          )(reader.result)
+          console.log('results', dataSample)
+          this.$set(this.body, 'feed', dataSample)
           this.uploadAdformCsv(this.body)
         }
       },

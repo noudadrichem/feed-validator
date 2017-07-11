@@ -139,7 +139,6 @@
             window.btoa
           )(reader.result)
           this.$set(this.body, 'file', dataSample)
-          console.log(this.body)
           this.adwordsPreFlight(this.body)
         }
       },
@@ -147,7 +146,6 @@
       adwordsPreFlight (body) {
         this.$http.post(`${Vue.$config.apiUrl}/v1/adwords/preFlight`, body)
           .then(({ body: res }) => {
-            console.log('adwordsPreFlight', res)
             this.$set(this, 'loading', false)
             this.$set(this, 'response', res.results)
 
@@ -160,7 +158,6 @@
       adwordsPostFlight (fileId) {
         this.$http.get(`${Vue.$config.apiUrl}/v1/adwords/postFlight/${this.feedType}/${fileId}`)
           .then(({ body: res }) => {
-            console.log('adwordsPostFlight', res)
             res.message
             ? this.$set(this, 'error', res.message)
             : this.$set(this, 'response', res) && this.$set(this, 'tested', true)

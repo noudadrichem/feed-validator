@@ -9,7 +9,6 @@ import '@/assets/styles/master.styl'
 import config from '@/config'
 
 Vue.$config = config
-console.log(Vue.$config)
 
 Vue.config.productionTip = false
 Vue.use(resource)
